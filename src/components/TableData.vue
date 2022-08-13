@@ -21,8 +21,8 @@
                     <td>{{ pokemon.name }}</td>
                     <td>{{ pokemon.description }}</td>
                     <td>
-                        <img :src="{ path: 'https://localhost:7039/wwwroot/images/' + pokemon.image }" alt="Pokemon Image"
-                            class="rounded-circle">
+                        <img :src="image" alt="Pokemon Image"
+                            class="rounded-circle" style="width: 50px; height: 50px;">
                     </td>
                     <td>
 
@@ -46,6 +46,7 @@ export default {
     data() {
         return {
             pokemons: [],
+            image: require('@/assets/logo.png')
 
         }
     },

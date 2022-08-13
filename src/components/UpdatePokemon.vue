@@ -2,28 +2,36 @@
 
 
     <div class=" justify-content-center w-100 p-3">
-        
-                <div class="form-group">
-                    <label for="exampleFormControlLablearea1">Name</label>
-                    <input v-model="Name" type="text" id="TextInput" class="form-control" :placeholder="[[pokemons.name]]">
-                </div>
 
-                <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Description</label>
-                    <input v-model="Desc" class="form-control" id="TextInput" rows="3">
-                </div>
+        <div class="text-center">
+            <img :src="image" class="rounded" alt="Pokemon Image">
+        </div>
 
-                <div class="mb-3">
-                    <label for="formFile" class="form-label">Select an image</label>
-                    <input class="form-control" type="file" id="formFile">
-                </div>
+        <div class="form-group">
+            <label for="exampleFormControlLablearea1">Name</label>
+            <input v-model="name" type="text" id="TextInput" class="form-control" :v-bind:value="pokemons.name">
+        </div>
 
-      
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+            <input v-model="desc" class="form-control" id="TextInput" rows="3" :v-bind:value="pokemons.desc">
+        </div>
 
-            <div class="d-flex justify-content-center">
-                <button class="btn btn-secondary ml-auto p-2"><router-link class="btn btn-sm" to="/">Home</router-link></button>
-                <button class="btn btn-warning mr-auto p-2 ms-3" type="submit" @click="updatePokemon(this.$route.params.id)"><router-link class="btn btn-sm" to="/">Update</router-link></button>
-            </div>
+        <div class="mb-3">
+            <label for="formFile" class="form-label">Select an image</label>
+            <input @change="uploadImage" class="form-control" type="file" id="formFile">
+        </div>
+
+
+
+        <div class="d-flex justify-content-center">
+            <button class="btn btn-secondary ml-auto p-2">
+                <router-link class="btn btn-sm" to="/">Home</router-link>
+            </button>
+            <button class="btn btn-warning mr-auto p-2 ms-3" type="submit"
+                @click="updateClick(this.$route.params.id)">Update</button>
+            <!-- <router-link class="btn btn-warning mr-auto p-2 ms-3" to="/"  v-on:click="updateClick(this.$route.params.id)">Update</router-link> -->
+        </div>
 
 
     </div>
@@ -38,8 +46,10 @@ export default {
     data() {
         return {
             pokemons: [],
-            Name:"",
-            Desc: ""
+            image: require('@/assets/logo.png'),
+            name: "",
+            desc: "",
+            selectedFile: "",
 
         }
     },
@@ -52,15 +62,23 @@ export default {
             });
 
     },
-    method: {
-        updatePokemon(id){
-            axios.put('https://localhost:7039/api/updatepokemon/'+ id,{
-                name: this.Name,
-                description: this.Desc,
-            })
-        }
-    }
 
+    methods: {
+
+        uploadImage(event) {
+            this.selectedFile = event.target.files[0];
+        },
+        updateClick(id) {
+            const fd = new FormData();
+            fd.append("Name", this.name);
+            fd.append("Files", this.selectedFile);
+            fd.append("Description", this.desc);
+            axios.put('https://localhost:7039/api/updatepokemon/' + id, fd)
+
+
+        }
+
+    }
 }
 
 
